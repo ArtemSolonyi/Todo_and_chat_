@@ -1,0 +1,22 @@
+.btn_delete_position {
+    position: relative;
+    left: 188px;
+    width: 96px;
+}
+
+.block_chat {
+/* Rectangle 1 */
+
+position: absolute;
+width: 238px;
+height: 258px;
+left: 80%;
+top: 36px;
+
+background: #F0EED6;
+border: 1px solid #EEB68D;
+box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+border-radius: 30px;
+
+
+}

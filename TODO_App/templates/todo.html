@@ -1,0 +1,102 @@
+{% extends 'home.html' %}
+{% block content %}
+    {% if user.model.autor %}
+        <p>Профиль {{ username }}</p>
+        <a href="{% url 'logout' %}">Выйти</a>
+        <div class="container">
+        <center>
+        <form action="{% url 'todo' %}" method="post">
+            {% csrf_token %}
+            <input type="text" style=width:400px name="task" placeholder="Введите название задачи">
+            <button type="submit" class="btn btn-primary">+Добавить</button>
+            <br>
+        </form>
+
+        {% for e in Task %}
+
+            <form action="{% url 'edit' %}" method="post">
+                <input value="{{ e.headline }}" type="text" style=width:370px name="tasks">
+                <input hidden name="id_name" type="text" value="{{ e.id }}">
+                {% csrf_token %}
+                <button style=margin-bottom:5px;margin-top:5px type="submit" class="btn btn-success">Изменить
+                </button>
+            </form>
+
+            <form action="{% url 'delete' %}" method="post">
+                <input hidden name="id_name" type="text" value="{{ e.id }}">
+                {% csrf_token %}
+                <button class="btn btn-danger btn_delete_position" type="submit">Удалить</button>
+            </form>
+
+        {% endfor %}
+
+
+    {% else %}
+        <a href="{% url 'login' %}">Войти</a>
+    {% endif %}
+</center>
+
+</div>
+
+
+    <div class="block_chat" id="block_chat">
+        <ul id="chat">
+        </ul>
+    </div>
+    <div style="position: absolute;left:80%;top:500px">
+        <form style="width:180px">
+            {% if user.model.autor %}
+                <input class="form-control" name="message" id="input" type="text"><br>
+                <input class="btn btn-secondary btn-lg btn-block" id="submit" type="button" value="Send">
+            {% else %}
+                <p>Писать?<a href="{% url 'login' %}">Войти</a></p>
+            {% endif %}
+        </form>
+    </div>
+    <div>{{ user.username }}</div>
+
+    </div>
+
+    {{ username|json_script:"user_username" }}
+
+    <script>
+        window.onload = function foo() {
+            for (var i = 0; i <localStorage.length+1;i++) {
+                var li = document.createElement('li');
+                li.innerHTML = localStorage.getItem(i);
+                li.setAttribute("style", "list-style-type: none;");
+                ul.appendChild(li);
+            }
+        }
+
+        const user_username = JSON.parse(document.getElementById('user_username').textContent);
+        document.querySelector('#submit').onclick = function () {
+            const messageInputDom = document.querySelector('#input');
+            const message = messageInputDom.value;
+            socket.send(JSON.stringify({"message": message, "username": user_username}));
+            messageInputDom.value = '';
+            localStorage['increment'] = j++;
+        };
+
+        if (localStorage['increment'] === undefined) {
+            localStorage['increment'] = 0;
+        }
+        var numberIncrement = Number(localStorage['increment']);
+        var j = numberIncrement;
+        ul = document.getElementById("chat");
+
+        var socket = new WebSocket('ws://localhost:8000');
+        socket.onmessage = function (e) {
+
+            var li = document.createElement('li');
+            li.innerHTML = e.data;
+            li.setAttribute("style", "list-style-type: none;");
+            ul.appendChild(li);
+
+            localStorage['increment'] = j++;
+            localStorage.setItem(localStorage['increment'], e.data);
+
+        };
+
+    </script>
+{% endblock %}

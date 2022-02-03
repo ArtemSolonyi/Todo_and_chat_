@@ -1,0 +1,18 @@
+{% extends 'home.html' %}
+{% block content %}
+<center>
+        <form class="container"  method="post" action="{% url 'register' %}">
+            {% csrf_token %}
+
+            <input type="text" name="username" placeholder="Введите Имя" value="{{ data.username}}"><br><br>
+            <input type="text" name="email" placeholder="Введите Почту" value="{{ data.email}}"><br><br>
+            <input type="password" name="password" placeholder="Введите Пароль"><br><br>
+            <input type="password" name="password2" placeholder="Введите пароль для подтверждения"><br><br>
+            <button class="btn btn-success" type="submit">Отправить</button><br><br>
+            {% for message in messages %}
+                <h class="alert alert-danger">{{ message }}</h>
+            {% endfor %}
+
+        </form>
+    </center>
+{% endblock %}

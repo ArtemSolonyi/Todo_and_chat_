@@ -1,0 +1,16 @@
+{% extends 'home.html' %}
+{% block content %}
+    <center>
+        <form class="container" method="POST" action="{% url 'login' %}">
+            {% csrf_token %}
+            <input type="text" name="email" placeholder="Введите Почту" value="{{ data.email }}"><br><br>
+            <input type="password" name="password" placeholder="Введите Пароль"><br><br>
+            <button class="btn btn-success" type="submit">Войти</button>
+            <br><br>
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+        </form>
+        <p>Еще нет аккаунта?<a href="{% url 'register' %}">Создать аккаунт</a></p>
+    </center>
+{% endblock %}
